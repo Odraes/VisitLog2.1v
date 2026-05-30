@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  RESIDENT
+  GUARD
+}
+
+enum VisitorStatus {
+  PENDING
+  TIMED_IN
+  TIMED_OUT
+}
+
+model Profile {
+  id         String   @id @default(uuid()) // mirrors Supabase auth.users.id
+  email      String   @unique
+  fullName   String
+  role       Role
+  unitNumber String? // only relevant for RESIDENT
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  registeredVisitors Visitor[] @relation("RegisteredBy")
+
+  @@map("profiles")
+}
+
+model Visitor {
+  id              String        @id @default(uuid())
+  fullName        String
+  idPictureUrl    String
+  email           String
+  purpose         String
+  targetUnit      String
+  expectedArrival DateTime
+  accessCode      String        @unique
+  status          VisitorStatus @default(PENDING)
+  timeIn          DateTime?
+  timeOut         DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  registeredById String
+  registeredBy   Profile @relation("RegisteredBy", fields: [registeredById], references: [id], onDelete: Cascade)
+
+  @@index([accessCode])
+  @@index([registeredById])
+  @@index([status])
+  @@map("visitors")
+}
