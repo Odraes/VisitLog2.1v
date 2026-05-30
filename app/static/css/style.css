@@ -1,0 +1,17 @@
+body {
+  min-height: 100vh;
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+}
+
+.table {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.card {
+  border: none;
+}
