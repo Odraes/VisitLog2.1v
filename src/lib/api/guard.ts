@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { buildAuthService } from "@/lib/container";
 import { User } from "@/lib/domain/entities/User";
 import { Role } from "@/types/user.types";
+import { VisitorError } from "@/lib/domain/services/VisitorService";
+import { AuthError } from "@/lib/domain/services/AuthService";
 
 export class ApiError extends Error {
   constructor(
@@ -36,6 +38,11 @@ export function errorResponse(err: unknown): NextResponse {
   if (err instanceof ApiError) {
     return NextResponse.json({ error: err.message }, { status: err.status });
   }
-  const message = err instanceof Error ? err.message : "Internal Server Error";
-  return NextResponse.json({ error: message }, { status: 400 });
+  if (err instanceof VisitorError) {
+    return NextResponse.json({ error: err.message }, { status: err.status });
+  }
+  if (err instanceof AuthError) {
+    return NextResponse.json({ error: err.message }, { status: 400 });
+  }
+  return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 }

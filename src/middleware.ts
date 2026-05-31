@@ -69,10 +69,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Role-based dashboard guard: redirect users away from other roles' areas.
+  // Role-based dashboard guard: users with an unknown/missing role are treated
+  // as unauthorised and sent to sign-in. Valid users are redirected to their
+  // own area if they try to access another role's dashboard.
   if (isDashboard) {
     const allowedPrefix = ROLE_HOME[role];
-    if (allowedPrefix && !pathname.startsWith(allowedPrefix)) {
+    if (!allowedPrefix || !pathname.startsWith(allowedPrefix)) {
       const url = request.nextUrl.clone();
       url.pathname = home;
       return NextResponse.redirect(url);

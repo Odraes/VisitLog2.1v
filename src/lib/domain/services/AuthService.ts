@@ -26,6 +26,10 @@ export class AuthService implements IAuthService {
    * client to be initialised with the service-role key.
    */
   async register(data: RegisterDTO): Promise<AuthResult> {
+    if (data.role === "ADMIN") {
+      throw new AuthError("Admin accounts cannot be created via self-registration");
+    }
+
     const { data: created, error } = await this.supabase.auth.admin.createUser({
       email: data.email,
       password: data.password,

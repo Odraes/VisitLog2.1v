@@ -1,12 +1,14 @@
 import { z } from "zod";
-import { Role, VisitorStatus } from "@prisma/client";
+import { Role } from "@prisma/client";
 
 export const registerSchema = z
   .object({
     email: z.string().email(),
     password: z.string().min(8, "Password must be at least 8 characters"),
     fullName: z.string().min(2, "Full name is required"),
-    role: z.nativeEnum(Role),
+    role: z.enum([Role.RESIDENT, Role.GUARD], {
+      error: "Role must be RESIDENT or GUARD",
+    }),
     unitNumber: z.string().optional(),
   })
   .refine(
@@ -39,7 +41,6 @@ export const updateVisitorSchema = z.object({
     .string()
     .refine((s) => !Number.isNaN(Date.parse(s)), "Invalid date/time")
     .optional(),
-  status: z.nativeEnum(VisitorStatus).optional(),
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;

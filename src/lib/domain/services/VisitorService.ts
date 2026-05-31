@@ -10,7 +10,14 @@ import {
   VisitorResult,
 } from "@/types/visitor.types";
 
-export class VisitorError extends Error {}
+export class VisitorError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number = 400
+  ) {
+    super(message);
+  }
+}
 
 /**
  * Encapsulates visitor business logic: code generation, QR rendering, and the
@@ -55,10 +62,15 @@ export class VisitorService implements IVisitorService {
 
   async logTimeIn(visitorId: string): Promise<Visitor> {
     const existing = await this.getVisitorById(visitorId);
-    if (!existing) throw new VisitorError("Visitor not found");
+    if (!existing) throw new VisitorError("Visitor not found", 404);
     if (!existing.canTimeIn()) {
       throw new VisitorError(
         `Cannot log time-in for a visitor with status ${existing.status}`
+      );
+    }
+    if (!existing.isExpected()) {
+      throw new VisitorError(
+        "Visitor is outside their expected arrival window (±4 hours)"
       );
     }
     const record = await this.visitorRepository.logTimeIn(visitorId);
@@ -67,7 +79,7 @@ export class VisitorService implements IVisitorService {
 
   async logTimeOut(visitorId: string): Promise<Visitor> {
     const existing = await this.getVisitorById(visitorId);
-    if (!existing) throw new VisitorError("Visitor not found");
+    if (!existing) throw new VisitorError("Visitor not found", 404);
     if (!existing.canTimeOut()) {
       throw new VisitorError(
         `Cannot log time-out for a visitor with status ${existing.status}`
@@ -83,11 +95,15 @@ export class VisitorService implements IVisitorService {
   }
 
   async updateVisitor(id: string, data: UpdateVisitorDTO): Promise<Visitor> {
+    const existing = await this.getVisitorById(id);
+    if (!existing) throw new VisitorError("Visitor not found", 404);
     const record = await this.visitorRepository.update(id, data);
     return new Visitor(record);
   }
 
   async deleteVisitor(id: string): Promise<void> {
+    const existing = await this.getVisitorById(id);
+    if (!existing) throw new VisitorError("Visitor not found", 404);
     await this.visitorRepository.delete(id);
   }
 

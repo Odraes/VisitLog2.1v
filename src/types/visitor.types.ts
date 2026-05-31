@@ -42,7 +42,6 @@ export interface UpdateVisitorDTO {
   purpose?: string;
   targetUnit?: string;
   expectedArrival?: string;
-  status?: VisitorStatus;
 }
 
 export interface VisitorFilters {
