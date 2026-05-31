@@ -94,7 +94,7 @@ function buildHtml(data: VisitorPassEmailData): string {
           <tr>
             <td style="padding:28px 40px 0;text-align:center;">
               <p style="margin:0 0 16px;color:#374151;font-size:15px;font-weight:600;">Your QR Code</p>
-              <img src="${data.qrCodeDataUrl}" alt="Visitor QR Code" width="200" style="border-radius:8px;border:1px solid #e5e7eb;" />
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data.accessCode)}" alt="Visitor QR Code" width="200" style="border-radius:8px;border:1px solid #e5e7eb;" />
             </td>
           </tr>
 
