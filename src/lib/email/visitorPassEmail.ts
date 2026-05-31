@@ -29,7 +29,7 @@ function formatArrival(isoString: string): string {
   });
 }
 
-function buildHtml(data: VisitorPassEmailData, qrCid: string): string {
+function buildHtml(data: VisitorPassEmailData): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,7 +94,7 @@ function buildHtml(data: VisitorPassEmailData, qrCid: string): string {
           <tr>
             <td style="padding:28px 40px 0;text-align:center;">
               <p style="margin:0 0 16px;color:#374151;font-size:15px;font-weight:600;">Your QR Code</p>
-              <img src="cid:${qrCid}" alt="Visitor QR Code" width="200" style="border-radius:8px;border:1px solid #e5e7eb;" />
+              <img src="${data.qrCodeDataUrl}" alt="Visitor QR Code" width="200" style="border-radius:8px;border:1px solid #e5e7eb;" />
             </td>
           </tr>
 
@@ -102,9 +102,13 @@ function buildHtml(data: VisitorPassEmailData, qrCid: string): string {
           <tr>
             <td style="padding:20px 40px 0;text-align:center;">
               <p style="margin:0 0 8px;color:#6b7280;font-size:13px;">Access Code</p>
-              <div style="display:inline-block;background:#1d4ed8;color:#ffffff;font-size:28px;font-weight:700;letter-spacing:6px;padding:12px 28px;border-radius:8px;">
-                ${data.accessCode}
-              </div>
+              <table cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                <tr>
+                  <td style="background:#1d4ed8;color:#ffffff;font-size:28px;font-weight:700;letter-spacing:6px;padding:12px 28px;border-radius:8px;">
+                    ${data.accessCode}
+                  </td>
+                </tr>
+              </table>
               <p style="margin:12px 0 0;color:#9ca3af;font-size:12px;">Show this code or the QR above to the guard at the entrance.</p>
             </td>
           </tr>
@@ -127,20 +131,10 @@ function buildHtml(data: VisitorPassEmailData, qrCid: string): string {
 }
 
 export async function sendVisitorPassEmail(data: VisitorPassEmailData): Promise<void> {
-  const qrCid = "qrcode-visitvault";
-  const base64Data = data.qrCodeDataUrl.split(",")[1];
-
   await transporter.sendMail({
     from: `VisitVault <${process.env.GMAIL_USER}>`,
     to: data.visitorEmail,
     subject: `Your Visitor Pass — ${data.accessCode}`,
-    html: buildHtml(data, qrCid),
-    attachments: [
-      {
-        filename: "visitor-pass-qr.png",
-        content: Buffer.from(base64Data, "base64"),
-        cid: qrCid,
-      },
-    ],
+    html: buildHtml(data),
   });
 }
