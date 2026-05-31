@@ -3,6 +3,7 @@ import { IVisitorRepository } from "@/lib/domain/interfaces/IVisitorRepository";
 import { Visitor } from "@/lib/domain/entities/Visitor";
 import { generateAlphanumericCode } from "@/lib/utils/codeGenerator";
 import { generateQRCodeDataURL } from "@/lib/utils/qrGenerator";
+import { sendVisitorPassEmail } from "@/lib/email/visitorPassEmail";
 import {
   RegisterVisitorDTO,
   UpdateVisitorDTO,
@@ -44,6 +45,16 @@ export class VisitorService implements IVisitorService {
 
     const visitor = new Visitor(record);
     const qrCodeDataUrl = await generateQRCodeDataURL(accessCode);
+
+    sendVisitorPassEmail({
+      visitorName: data.fullName,
+      visitorEmail: data.email,
+      accessCode,
+      qrCodeDataUrl,
+      targetUnit: data.targetUnit,
+      purpose: data.purpose,
+      expectedArrival: data.expectedArrival,
+    }).catch((err) => console.error("[VisitorService] Failed to send pass email:", err));
 
     return { visitor: visitor.toJSON(), accessCode, qrCodeDataUrl };
   }
