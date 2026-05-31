@@ -73,7 +73,7 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
           {error}
         </p>
       )}
@@ -119,14 +119,14 @@ export function RegisterForm() {
               onClick={() => setRole(opt.value)}
               className={`rounded-lg border p-3 text-left text-sm transition-colors ${
                 role === opt.value
-                  ? "border-indigo-600 bg-indigo-50"
-                  : "border-slate-300 hover:border-slate-400"
+                  ? "border-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 dark:border-indigo-400"
+                  : "border-slate-300 hover:border-slate-400 dark:border-slate-600 dark:hover:border-slate-500"
               }`}
             >
-              <span className="block font-semibold text-slate-900">
+              <span className="block font-semibold text-slate-900 dark:text-white">
                 {opt.label}
               </span>
-              <span className="text-xs text-slate-500">{opt.hint}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{opt.hint}</span>
             </button>
           ))}
         </div>
@@ -145,9 +145,9 @@ export function RegisterForm() {
       <Button type="submit" disabled={loading} className="w-full">
         {loading ? "Creating account…" : "Register"}
       </Button>
-      <p className="text-center text-sm text-slate-600">
+      <p className="text-center text-sm text-slate-600 dark:text-slate-400">
         Already have an account?{" "}
-        <Link href="/auth/signin" className="font-medium text-indigo-600">
+        <Link href="/auth/signin" className="font-medium text-indigo-600 dark:text-indigo-400">
           Sign in
         </Link>
       </p>

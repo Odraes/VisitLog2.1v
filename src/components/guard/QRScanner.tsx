@@ -67,13 +67,13 @@ export function QRScanner({ onScan }: QRScannerProps) {
   return (
     <div className="space-y-3">
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
           {error}
         </p>
       )}
       <div
         id={REGION_ID}
-        className="mx-auto w-full max-w-sm overflow-hidden rounded-lg bg-slate-100"
+        className="mx-auto w-full max-w-sm overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-700"
       />
       {active ? (
         <Button variant="secondary" onClick={() => setActive(false)}>

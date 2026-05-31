@@ -34,7 +34,7 @@ export function GuardConsole() {
 
   return (
     <div className="mx-auto max-w-xl space-y-6">
-      <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+      <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:ring-slate-700">
         <div className="mb-4 flex gap-2">
           <TabButton active={tab === "scan"} onClick={() => setTab("scan")}>
             Scan QR
@@ -51,7 +51,7 @@ export function GuardConsole() {
         )}
 
         {error && (
-          <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
             {error}
           </p>
         )}
@@ -79,7 +79,7 @@ function TabButton({
       className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
         active
           ? "bg-indigo-600 text-white"
-          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+          : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
       }`}
     >
       {children}

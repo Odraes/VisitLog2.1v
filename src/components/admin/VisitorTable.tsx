@@ -61,14 +61,14 @@ export function VisitorTable() {
       <SearchBar value={search} onChange={setSearch} />
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
           {error}
         </p>
       )}
 
-      <div className="overflow-x-auto rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+      <div className="overflow-x-auto rounded-xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:ring-slate-700">
+        <table className="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-700">
+          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-900/50 dark:text-slate-400">
             <tr>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Unit</th>
@@ -79,34 +79,34 @@ export function VisitorTable() {
               <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
             {loading ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-slate-400">
+                <td colSpan={7} className="px-4 py-8 text-center text-slate-400 dark:text-slate-500">
                   Loading…
                 </td>
               </tr>
             ) : visitors.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-slate-400">
+                <td colSpan={7} className="px-4 py-8 text-center text-slate-400 dark:text-slate-500">
                   No visitor records found.
                 </td>
               </tr>
             ) : (
               visitors.map((v) => (
-                <tr key={v.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-900">
+                <tr key={v.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                  <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">
                     {v.fullName}
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{v.targetUnit}</td>
-                  <td className="px-4 py-3 text-slate-600">{v.purpose}</td>
-                  <td className="px-4 py-3 font-mono text-slate-600">
+                  <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{v.targetUnit}</td>
+                  <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{v.purpose}</td>
+                  <td className="px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
                     {v.accessCode}
                   </td>
                   <td className="px-4 py-3">
                     <StatusBadge status={v.status} />
                   </td>
-                  <td className="px-4 py-3 text-slate-600">
+                  <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
                     {new Date(v.expectedArrival).toLocaleString()}
                   </td>
                   <td className="px-4 py-3">

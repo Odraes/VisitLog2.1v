@@ -33,16 +33,16 @@ export function VisitorInfoCard({ visitor, onUpdated }: VisitorInfoCardProps) {
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+    <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:ring-slate-700">
       <div className="flex items-start gap-4">
         <img
           src={visitor.idPictureUrl}
           alt={`ID of ${visitor.fullName}`}
-          className="h-24 w-24 rounded-lg object-cover ring-1 ring-slate-200"
+          className="h-24 w-24 rounded-lg object-cover ring-1 ring-slate-200 dark:ring-slate-600"
         />
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
               {visitor.fullName}
             </h2>
             <StatusBadge status={visitor.status} />
@@ -73,7 +73,7 @@ export function VisitorInfoCard({ visitor, onUpdated }: VisitorInfoCardProps) {
       </div>
 
       {error && (
-        <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
           {error}
         </p>
       )}
@@ -109,10 +109,10 @@ function Detail({
 }) {
   return (
     <div>
-      <dt className="text-xs uppercase tracking-wide text-slate-400">
+      <dt className="text-xs uppercase tracking-wide text-slate-400 dark:text-slate-500">
         {label}
       </dt>
-      <dd className={`text-slate-800 ${mono ? "font-mono" : ""}`}>{value}</dd>
+      <dd className={`text-slate-800 dark:text-slate-200 ${mono ? "font-mono" : ""}`}>{value}</dd>
     </div>
   );
 }

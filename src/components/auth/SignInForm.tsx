@@ -44,7 +44,7 @@ export function SignInForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
           {error}
         </p>
       )}
@@ -73,9 +73,9 @@ export function SignInForm() {
       <Button type="submit" disabled={loading} className="w-full">
         {loading ? "Signing in…" : "Sign In"}
       </Button>
-      <p className="text-center text-sm text-slate-600">
+      <p className="text-center text-sm text-slate-600 dark:text-slate-400">
         No account?{" "}
-        <Link href="/auth/register" className="font-medium text-indigo-600">
+        <Link href="/auth/register" className="font-medium text-indigo-600 dark:text-indigo-400">
           Register
         </Link>
       </p>

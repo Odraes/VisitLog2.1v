@@ -52,7 +52,7 @@ export function EditVisitorModal({
     <Modal open onClose={onClose} title="Edit Visitor">
       <form onSubmit={handleSave} className="space-y-3">
         {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
             {error}
           </p>
         )}
@@ -95,7 +95,7 @@ export function EditVisitorModal({
             id="edit-status"
             value={status}
             onChange={(e) => setStatus(e.target.value as VisitorStatus)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
           >
             {STATUSES.map((s) => (
               <option key={s} value={s}>

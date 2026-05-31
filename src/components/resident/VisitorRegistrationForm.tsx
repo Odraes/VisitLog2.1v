@@ -104,10 +104,10 @@ export function VisitorRegistrationForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200"
+      className="space-y-4 rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:ring-slate-700"
     >
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
           {error}
         </p>
       )}
