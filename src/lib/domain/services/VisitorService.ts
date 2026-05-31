@@ -46,17 +46,27 @@ export class VisitorService implements IVisitorService {
     const visitor = new Visitor(record);
     const qrCodeDataUrl = await generateQRCodeDataURL(accessCode);
 
-    sendVisitorPassEmail({
-      visitorName: data.fullName,
-      visitorEmail: data.email,
-      accessCode,
-      qrCodeDataUrl,
-      targetUnit: data.targetUnit,
-      purpose: data.purpose,
-      expectedArrival: data.expectedArrival,
-    }).catch((err) => console.error("[VisitorService] Failed to send pass email:", err));
+    // Await the send so the result is accurate and the email isn't dropped on
+    // serverless (functions can freeze right after the response is returned).
+    // A failure must not block registration — the pass is still usable via the
+    // access code / QR shown to the resident.
+    let emailSent = false;
+    try {
+      await sendVisitorPassEmail({
+        visitorName: data.fullName,
+        visitorEmail: data.email,
+        accessCode,
+        qrCodeDataUrl,
+        targetUnit: data.targetUnit,
+        purpose: data.purpose,
+        expectedArrival: data.expectedArrival,
+      });
+      emailSent = true;
+    } catch (err) {
+      console.error("[VisitorService] Failed to send pass email:", err);
+    }
 
-    return { visitor: visitor.toJSON(), accessCode, qrCodeDataUrl };
+    return { visitor: visitor.toJSON(), accessCode, qrCodeDataUrl, emailSent };
   }
 
   async lookupByCode(code: string): Promise<Visitor | null> {

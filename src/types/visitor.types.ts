@@ -56,4 +56,6 @@ export interface VisitorResult {
   visitor: VisitorRecord;
   accessCode: string;
   qrCodeDataUrl: string;
+  /** Whether the visitor-pass email was successfully dispatched. */
+  emailSent: boolean;
 }

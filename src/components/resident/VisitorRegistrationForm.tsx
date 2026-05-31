@@ -92,12 +92,20 @@ export function VisitorRegistrationForm({
 
   if (result) {
     return (
-      <QRCodeDisplay
-        accessCode={result.accessCode}
-        qrCodeDataUrl={result.qrCodeDataUrl}
-        visitorName={result.visitor.fullName}
-        onRegisterAnother={reset}
-      />
+      <div className="space-y-4">
+        {!result.emailSent && (
+          <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-400">
+            The pass was created, but the email to the visitor could not be sent.
+            Please share the access code or QR code below with them directly.
+          </p>
+        )}
+        <QRCodeDisplay
+          accessCode={result.accessCode}
+          qrCodeDataUrl={result.qrCodeDataUrl}
+          visitorName={result.visitor.fullName}
+          onRegisterAnother={reset}
+        />
+      </div>
     );
   }
 

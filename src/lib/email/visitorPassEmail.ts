@@ -131,6 +131,11 @@ function buildHtml(data: VisitorPassEmailData): string {
 }
 
 export async function sendVisitorPassEmail(data: VisitorPassEmailData): Promise<void> {
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    throw new Error(
+      "Email not configured: GMAIL_USER and GMAIL_APP_PASSWORD must be set in the environment."
+    );
+  }
   await transporter.sendMail({
     from: `VisitVault <${process.env.GMAIL_USER}>`,
     to: data.visitorEmail,
