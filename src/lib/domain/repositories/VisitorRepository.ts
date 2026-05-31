@@ -72,6 +72,12 @@ export class VisitorRepository implements IVisitorRepository {
         ...(data.expectedArrival
           ? { expectedArrival: new Date(data.expectedArrival) }
           : {}),
+        // Keep the time-in/out timestamps consistent with a manual status change.
+        ...(data.status === "PENDING" ? { timeIn: null, timeOut: null } : {}),
+        ...(data.status === "TIMED_IN"
+          ? { timeIn: new Date(), timeOut: null }
+          : {}),
+        ...(data.status === "TIMED_OUT" ? { timeOut: new Date() } : {}),
       },
     });
   }

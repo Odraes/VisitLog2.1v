@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Role } from "@prisma/client";
+import { Role, VisitorStatus } from "@prisma/client";
 
 export const registerSchema = z
   .object({
@@ -40,6 +40,13 @@ export const updateVisitorSchema = z.object({
   expectedArrival: z
     .string()
     .refine((s) => !Number.isNaN(Date.parse(s)), "Invalid date/time")
+    .optional(),
+  status: z
+    .enum([
+      VisitorStatus.PENDING,
+      VisitorStatus.TIMED_IN,
+      VisitorStatus.TIMED_OUT,
+    ])
     .optional(),
 });
 
