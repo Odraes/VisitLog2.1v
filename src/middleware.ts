@@ -7,6 +7,48 @@ const ROLE_HOME: Record<string, string> = {
   GUARD: "/dashboard/guard",
 };
 
+// Identity forwarded to route handlers / server pages so they don't have to
+// re-call auth.getUser() + the Profile DB lookup. Always stripped from the
+// incoming request and re-set from the verified user to prevent spoofing.
+const IDENTITY_HEADERS = [
+  "x-user-id",
+  "x-user-email",
+  "x-user-role",
+  "x-user-name",
+  "x-user-unit",
+  "x-user-created",
+] as const;
+
+/**
+ * Forwards the verified identity (or strips it, when unauthenticated) onto the
+ * request the downstream handler sees, while preserving the refreshed Supabase
+ * session cookies carried on `baseResponse`.
+ */
+function passThroughWithIdentity(
+  request: NextRequest,
+  baseResponse: NextResponse,
+  user: { id: string; email?: string; created_at?: string; user_metadata?: Record<string, unknown> } | null
+) {
+  const requestHeaders = new Headers(request.headers);
+  IDENTITY_HEADERS.forEach((h) => requestHeaders.delete(h));
+
+  if (user) {
+    const meta = user.user_metadata ?? {};
+    requestHeaders.set("x-user-id", user.id);
+    requestHeaders.set("x-user-email", user.email ?? "");
+    requestHeaders.set("x-user-role", (meta.role as string) ?? "");
+    requestHeaders.set("x-user-name", (meta.fullName as string) ?? "");
+    requestHeaders.set("x-user-unit", (meta.unitNumber as string) ?? "");
+    requestHeaders.set("x-user-created", user.created_at ?? "");
+  }
+
+  const finalResponse = NextResponse.next({ request: { headers: requestHeaders } });
+  baseResponse.headers
+    .getSetCookie()
+    .forEach((cookie) => finalResponse.headers.append("set-cookie", cookie));
+  return finalResponse;
+}
+
 /**
  * Refreshes the Supabase session cookie on every request and enforces
  * authentication + role-based routing for /dashboard/* and /api/* routes.
@@ -56,7 +98,7 @@ export async function middleware(request: NextRequest) {
       url.pathname = "/auth/signin";
       return NextResponse.redirect(url);
     }
-    return response;
+    return passThroughWithIdentity(request, response, null);
   }
 
   const role = (user.user_metadata?.role as string | undefined) ?? "";
@@ -81,7 +123,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return response;
+  return passThroughWithIdentity(request, response, user);
 }
 
 export const config = {

@@ -34,7 +34,11 @@ export class AuthService implements IAuthService {
       email: data.email,
       password: data.password,
       email_confirm: true,
-      user_metadata: { fullName: data.fullName, role: data.role },
+      user_metadata: {
+        fullName: data.fullName,
+        role: data.role,
+        unitNumber: data.unitNumber ?? null,
+      },
     });
 
     if (error || !created.user) {

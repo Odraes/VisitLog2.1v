@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { buildAuthService } from "@/lib/container";
+import { getUserFromHeaders } from "@/lib/auth/identity";
 import { Role } from "@/types/user.types";
 import { User } from "@/lib/domain/entities/User";
 
@@ -11,8 +10,9 @@ import { User } from "@/lib/domain/entities/User";
 export async function getCurrentUserOrRedirect(
   requiredRole?: Role
 ): Promise<User> {
-  const supabase = createClient();
-  const user = await buildAuthService(supabase).getCurrentUser();
+  // Identity is verified once in middleware and forwarded via request headers,
+  // avoiding a redundant auth.getUser()/DB lookup on every page render.
+  const user = getUserFromHeaders();
 
   if (!user) redirect("/auth/signin");
   if (requiredRole && user.role !== requiredRole) {

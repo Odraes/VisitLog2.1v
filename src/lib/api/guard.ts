@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { buildAuthService } from "@/lib/container";
+import { getUserFromHeaders } from "@/lib/auth/identity";
 import { User } from "@/lib/domain/entities/User";
 import { Role } from "@/types/user.types";
 import { VisitorError } from "@/lib/domain/services/VisitorService";
@@ -20,9 +19,9 @@ export class ApiError extends Error {
  * enforces a role allow-list. Throws ApiError (401/403) when checks fail.
  */
 export async function requireUser(allowedRoles?: Role[]): Promise<User> {
-  const supabase = createClient();
-  const authService = buildAuthService(supabase);
-  const user = await authService.getCurrentUser();
+  // Identity is verified once in middleware and forwarded via request headers,
+  // so no auth.getUser()/DB round-trip is needed here.
+  const user = getUserFromHeaders();
 
   if (!user) {
     throw new ApiError("Unauthorized", 401);
